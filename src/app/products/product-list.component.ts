@@ -17,7 +17,7 @@ export class ProductListComponent implements OnInit {
     imageMargin: number = 2;
     showImage: boolean = false;
     _listFilter: string;
-
+    errorMessage: string;
     get  listFilter(): string{
         return this._listFilter;
     }
@@ -39,8 +39,13 @@ constructor(private _productService: ProductService){
         this.showImage = !this.showImage;
     }
     ngOnInit(): void {
-        
-        this.products = this._productService.getProducts();
+        this._productService.getProducts()
+            .subscribe(products => {
+                this.products = products;
+                this.filteredProducts = this.products;
+            },
+                error =>  this.errorMessage = <any>error);
+                ;
         this.filteredProducts = this.products;
     }
     performFilter(filterBy: string): any {
